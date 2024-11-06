@@ -21,6 +21,7 @@ type Client interface {
 	Pipelines() Pipelines
 	Calls() Calls
 	Catalogs() Catalogs
+	Users() Users
 	EventsV2() EventsV2
 }
 
