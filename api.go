@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -304,19 +305,34 @@ func (a *api) refreshToken() error {
 
 	a.token = token
 
-	jt := JSONToken{
-		AccessToken:  token.AccessToken(),
-		RefreshToken: token.RefreshToken(),
-		TokenType:    token.TokenType(),
-		ExpiresAt:    token.ExpiresAt(),
+	jt := crmConnJSON{
+		AccessToken:          token.AccessToken(),
+		RefreshToken:         token.RefreshToken(),
+		AccessTokenExpiresAt: strconv.FormatInt(token.ExpiresAt().Unix(), 10),
 	}
 
-	data, err := json.Marshal(jt)
+	// Чтение данных из файла
+	fileData, err := ioutil.ReadFile("settings.json")
 	if err != nil {
 		return err
 	}
 
-	if err := ioutil.WriteFile("amocrm_token.json", data, os.ModePerm); err != nil {
+	// Декодирование JSON в map
+	var settings map[string]interface{}
+	if err := json.Unmarshal(fileData, &settings); err != nil {
+		return err
+	}
+
+	// Изменение нужной секции
+	settings["crm_conn"] = jt
+
+	// Кодирование измененного JSON
+	updatedJsonData, err := json.MarshalIndent(settings, "", "    ")
+	if err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile("settings.json", updatedJsonData, os.ModePerm); err != nil {
 		fmt.Println("set WriteFile TokenStored:", err)
 	}
 	if a.storage != nil {

@@ -28,6 +28,19 @@ type tokenJSON struct {
 	ExpiresIn    int32  `json:"expires_in"`
 }
 
+type crmConnJSON struct {
+	RedirectUri          string `json:"redirect_uri"`
+	RefreshToken         string `json:"refresh_token"`
+	AccessTokenExpiresAt string `json:"access_token_expires_at"`
+	AccessTokenGotAt     string `json:"access_token_got_at"`
+	RefreshTokenAt       string `json:"refresh_token_at"`
+	SecretKey            string `json:"secret_key"`
+	IntegrationId        string `json:"integration_id"`
+	AmocrmDomain         string `json:"amocrm_domain"`
+	AccessToken          string `json:"access_token"`
+	AuthorizationCode    string `json:"authorization_code"`
+}
+
 // tokenSource implements GetToken interface.
 type tokenSource struct {
 	accessToken  string
