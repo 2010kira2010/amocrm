@@ -9,11 +9,11 @@ import (
 
 // Leads describes methods available for Leads entity.
 type Leads interface {
-	GetLead(leadID string) (*LeadOne, error, int)
+	GetLead(leadID string) (*Lead, error, int)
 	GetListCustomFieldsLeads(fieldID string) (*CustomsField, error, int)
-	GetLeads(values url.Values) (*LeadsArr, error, int)
-	Create(leads []LeadOne) ([]LeadOne, error, int)
-	Update(leads []LeadOne) ([]LeadOne, error, int)
+	GetLeads(values url.Values) (*Leadss, error, int)
+	Create(leads []Lead) ([]Lead, error, int)
+	Update(leads []Lead) ([]Lead, error, int)
 	AddNotes(notes []Notes) ([]Notes, error, int)
 }
 
@@ -44,7 +44,7 @@ func (a leads) GetListCustomFieldsLeads(fieldID string) (res *CustomsField, err 
 	return res, nil, r.StatusCode
 }
 
-func (a leads) GetLead(leadID string) (res *LeadOne, err error, StatusCode int) {
+func (a leads) GetLead(leadID string) (res *Lead, err error, StatusCode int) {
 	urlLead := url.Values{}
 	urlLead.Add("with", "contacts")
 	r, errBody := a.api.do(leadsEndpoint+endpoint("/"+leadID), http.MethodGet, urlLead, nil, nil)
@@ -53,7 +53,7 @@ func (a leads) GetLead(leadID string) (res *LeadOne, err error, StatusCode int) 
 		return nil, errBody, r.StatusCode
 	}
 
-	res = &LeadOne{}
+	res = &Lead{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -61,7 +61,7 @@ func (a leads) GetLead(leadID string) (res *LeadOne, err error, StatusCode int) 
 	return res, nil, r.StatusCode
 }
 
-func (a leads) GetLeads(values url.Values) (res *LeadsArr, err error, StatusCode int) {
+func (a leads) GetLeads(values url.Values) (res *Leadss, err error, StatusCode int) {
 	r, err := a.api.do(leadsEndpoint, http.MethodGet, values, nil, nil)
 	if err != nil {
 		return nil, err, r.StatusCode
@@ -76,7 +76,7 @@ func (a leads) GetLeads(values url.Values) (res *LeadsArr, err error, StatusCode
 		}
 	}()
 
-	res = &LeadsArr{}
+	res = &Leadss{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -84,7 +84,7 @@ func (a leads) GetLeads(values url.Values) (res *LeadsArr, err error, StatusCode
 	return res, err, r.StatusCode
 }
 
-func (a leads) Create(leads []LeadOne) (res []LeadOne, err error, StatusCode int) {
+func (a leads) Create(leads []Lead) (res []Lead, err error, StatusCode int) {
 	resp, rErr := a.api.do(leadsEndpoint, http.MethodPost, nil, nil, leads)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create leads: %w", rErr), resp.StatusCode
@@ -92,7 +92,7 @@ func (a leads) Create(leads []LeadOne) (res []LeadOne, err error, StatusCode int
 
 	var resLead struct {
 		Embedded struct {
-			Leads []LeadOne `json:"leads"`
+			Leads []Lead `json:"leads"`
 		} `json:"_embedded"`
 	}
 
@@ -103,7 +103,7 @@ func (a leads) Create(leads []LeadOne) (res []LeadOne, err error, StatusCode int
 	return resLead.Embedded.Leads, nil, resp.StatusCode
 }
 
-func (a leads) Update(leads []LeadOne) (res []LeadOne, err error, StatusCode int) {
+func (a leads) Update(leads []Lead) (res []Lead, err error, StatusCode int) {
 	resp, rErr := a.api.do(leadsEndpoint, http.MethodPatch, nil, nil, leads)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update leads: %w", rErr), resp.StatusCode
@@ -111,7 +111,7 @@ func (a leads) Update(leads []LeadOne) (res []LeadOne, err error, StatusCode int
 
 	var resLead struct {
 		Embedded struct {
-			Leads []LeadOne `json:"leads"`
+			Leads []Lead `json:"leads"`
 		} `json:"_embedded"`
 	}
 

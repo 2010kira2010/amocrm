@@ -1,6 +1,6 @@
 package amocrm
 
-type LeadOne struct {
+type Lead struct {
 	ID                 int             `json:"id,omitempty"`
 	Name               string          `json:"name,omitempty"`
 	Price              int             `json:"price,omitempty"`
@@ -23,7 +23,7 @@ type LeadOne struct {
 	Embedded           *LeadEmbedded   `json:"_embedded,omitempty"`
 }
 
-type LeadsArr struct {
+type Leadss struct {
 	Page  int `json:"_page,omitempty"`
 	Links struct {
 		Self struct {
@@ -31,28 +31,7 @@ type LeadsArr struct {
 		} `json:"self,omitempty"`
 	} `json:"_links,omitempty"`
 	Embedded struct {
-		Leads []struct {
-			ID                 int             `json:"id,omitempty"`
-			Name               string          `json:"name,omitempty"`
-			Price              int             `json:"price,omitempty"`
-			ResponsibleUserID  int             `json:"responsible_user_id,omitempty"`
-			GroupID            int             `json:"group_id,omitempty"`
-			StatusID           int             `json:"status_id,omitempty"`
-			PipelineID         int             `json:"pipeline_id,omitempty"`
-			LossReasonID       interface{}     `json:"loss_reason_id,omitempty"`
-			CreatedBy          int             `json:"created_by,omitempty"`
-			UpdatedBy          int             `json:"updated_by,omitempty"`
-			CreatedAt          int             `json:"created_at,omitempty"`
-			UpdatedAt          int             `json:"updated_at,omitempty"`
-			ClosedAt           int             `json:"closed_at,omitempty"`
-			ClosestTaskAt      interface{}     `json:"closest_task_at,omitempty"`
-			IsDeleted          bool            `json:"is_deleted,omitempty"`
-			CustomFieldsValues []CustomsFields `json:"custom_fields_values,omitempty"`
-			Score              interface{}     `json:"score,omitempty"`
-			AccountID          int             `json:"account_id,omitempty"`
-			LaborCost          interface{}     `json:"labor_cost,omitempty"`
-			Embedded           *LeadEmbedded   `json:"_embedded,omitempty"`
-		} `json:"leads,omitempty"`
+		Leads []Lead `json:"leads,omitempty"`
 	} `json:"_embedded,omitempty"`
 }
 

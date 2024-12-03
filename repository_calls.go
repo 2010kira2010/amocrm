@@ -8,7 +8,7 @@ import (
 
 // Calls describes methods available for Calls entity
 type Calls interface {
-	Create(calls []Call) ([]ContactOne, []CallError, error)
+	Create(calls []Call) ([]Contact, []CallError, error)
 }
 
 // Verify interface compliance.
@@ -23,7 +23,7 @@ func newCalls(api *api) Calls {
 }
 
 // Create returns an Contacts entity for successfully added Calls
-func (a calls) Create(calls []Call) ([]ContactOne, []CallError, error) {
+func (a calls) Create(calls []Call) ([]Contact, []CallError, error) {
 	resp, rErr := a.api.do(callsEndpoint, http.MethodPost, nil, nil, calls)
 	if rErr != nil {
 		return nil, nil, fmt.Errorf("get calls: %w", rErr)
@@ -32,7 +32,7 @@ func (a calls) Create(calls []Call) ([]ContactOne, []CallError, error) {
 	var res struct {
 		Errors   []CallError `json:"errors"`
 		Embedded struct {
-			Contacts []ContactOne `json:"calls"`
+			Contacts []Contact `json:"calls"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.readCall(resp, &res); err != nil {

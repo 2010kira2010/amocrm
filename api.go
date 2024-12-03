@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -305,26 +306,18 @@ func (a *api) refreshToken() error {
 
 	a.token = token
 
-	jt := crmConnJSON{
-		AccessToken:          token.AccessToken(),
-		RefreshToken:         token.RefreshToken(),
-		AccessTokenExpiresAt: strconv.FormatInt(token.ExpiresAt().Unix(), 10),
-	}
-
-	// Чтение данных из файла
-	fileData, err := ioutil.ReadFile("settings.json")
+	data, err := ioutil.ReadFile("settings.json")
 	if err != nil {
-		return err
+		log.Fatalf("Error reading settings file: %v", err)
 	}
 
-	// Декодирование JSON в map
-	var settings map[string]interface{}
-	if err := json.Unmarshal(fileData, &settings); err != nil {
-		return err
+	var settings crmConnJSON
+	if err := json.Unmarshal(data, &settings); err != nil {
+		log.Fatalf("Error unmarshalling settings JSON: %v", err)
 	}
-
-	// Изменение нужной секции
-	settings["crm_conn"] = jt
+	settings.RefreshToken = token.RefreshToken()
+	settings.AccessToken = token.AccessToken()
+	settings.AccessTokenExpiresAt = strconv.FormatInt(token.ExpiresAt().Unix(), 10)
 
 	// Кодирование измененного JSON
 	updatedJsonData, err := json.MarshalIndent(settings, "", "    ")

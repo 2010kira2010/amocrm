@@ -66,7 +66,7 @@ func TestLeads_Create(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	contacts, err, _ := almostValidClient.Contacts().Create([]amocrm.ContactOne{
+	contacts, err, _ := almostValidClient.Contacts().Create([]amocrm.Contact{
 		{
 			Name:      "+79999999999",
 			FirstName: "Test",
@@ -87,7 +87,7 @@ func TestLeads_Create(t *testing.T) {
 	}
 	fmt.Println(contacts)
 
-	leads, err, _ := almostValidClient.Leads().Create([]amocrm.LeadOne{
+	leads, err, _ := almostValidClient.Leads().Create([]amocrm.Lead{
 		{
 			Name: "+79999999999",
 			Embedded: &amocrm.LeadEmbedded{
@@ -111,7 +111,7 @@ func TestLeads_Create(t *testing.T) {
 	}
 	fmt.Println(leads)
 
-	almostValidClient.Leads().Update([]amocrm.LeadOne{
+	almostValidClient.Leads().Update([]amocrm.Lead{
 		{
 			ID:       leads[0].ID,
 			StatusID: 41138881,

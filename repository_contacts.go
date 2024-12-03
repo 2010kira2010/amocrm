@@ -8,10 +8,10 @@ import (
 )
 
 type Contacts interface {
-	GetContact(contactID string) (*ContactOne, error, int)
-	GetContacts(values url.Values) (*ContactsArr, error, int)
-	Create(contacts []ContactOne) ([]ContactOne, error, int)
-	Update(contacts []ContactOne) ([]ContactOne, error, int)
+	GetContact(contactID string) (*Contact, error, int)
+	GetContacts(values url.Values) (*Contactss, error, int)
+	Create(contacts []Contact) ([]Contact, error, int)
+	Update(contacts []Contact) ([]Contact, error, int)
 }
 
 // Verify interface compliance.
@@ -25,7 +25,7 @@ func newContacts(api *api) Contacts {
 	return contacts{api: api}
 }
 
-func (a contacts) GetContact(contactID string) (res *ContactOne, err error, StatusCode int) {
+func (a contacts) GetContact(contactID string) (res *Contact, err error, StatusCode int) {
 	urlcontact := url.Values{}
 	urlcontact.Add("with", "leads")
 	resp, rErr := a.api.do(contactsEndpoint+endpoint("/"+contactID), http.MethodGet, urlcontact, nil, nil)
@@ -43,7 +43,7 @@ func (a contacts) GetContact(contactID string) (res *ContactOne, err error, Stat
 		}
 	}()
 
-	res = &ContactOne{}
+	res = &Contact{}
 	if err := json.NewDecoder(resp.Body).Decode(res); err != nil {
 		return nil, err, resp.StatusCode
 	}
@@ -51,7 +51,7 @@ func (a contacts) GetContact(contactID string) (res *ContactOne, err error, Stat
 	return res, nil, resp.StatusCode
 }
 
-func (a contacts) GetContacts(values url.Values) (res *ContactsArr, err error, StatusCode int) {
+func (a contacts) GetContacts(values url.Values) (res *Contactss, err error, StatusCode int) {
 	r, err := a.api.do(contactsEndpoint, http.MethodGet, values, nil, nil)
 	if err != nil {
 		return nil, err, r.StatusCode
@@ -66,7 +66,7 @@ func (a contacts) GetContacts(values url.Values) (res *ContactsArr, err error, S
 		}
 	}()
 
-	res = &ContactsArr{}
+	res = &Contactss{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -74,7 +74,7 @@ func (a contacts) GetContacts(values url.Values) (res *ContactsArr, err error, S
 	return res, err, r.StatusCode
 }
 
-func (a contacts) Create(contacts []ContactOne) (res []ContactOne, err error, StatusCode int) {
+func (a contacts) Create(contacts []Contact) (res []Contact, err error, StatusCode int) {
 	resp, rErr := a.api.do(contactsEndpoint, http.MethodPost, nil, nil, contacts)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create contacts: %w", rErr), resp.StatusCode
@@ -82,7 +82,7 @@ func (a contacts) Create(contacts []ContactOne) (res []ContactOne, err error, St
 
 	var resContact struct {
 		Embedded struct {
-			Contacts []ContactOne `json:"contacts"`
+			Contacts []Contact `json:"contacts"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.read(resp, &resContact); err != nil {
@@ -91,7 +91,7 @@ func (a contacts) Create(contacts []ContactOne) (res []ContactOne, err error, St
 	return resContact.Embedded.Contacts, nil, resp.StatusCode
 }
 
-func (a contacts) Update(contacts []ContactOne) (res []ContactOne, err error, StatusCode int) {
+func (a contacts) Update(contacts []Contact) (res []Contact, err error, StatusCode int) {
 	resp, rErr := a.api.do(contactsEndpoint, http.MethodPatch, nil, nil, contacts)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update contacts: %w", rErr), resp.StatusCode
@@ -99,7 +99,7 @@ func (a contacts) Update(contacts []ContactOne) (res []ContactOne, err error, St
 
 	var resContact struct {
 		Embedded struct {
-			Contacts []ContactOne `json:"contacts"`
+			Contacts []Contact `json:"contacts"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.read(resp, &resContact); err != nil {
