@@ -306,7 +306,7 @@ func (a *api) refreshToken() error {
 
 	a.token = token
 
-	data, err := ioutil.ReadFile("settings.json")
+	data, err := ioutil.ReadFile("amocrm_token.json")
 	if err != nil {
 		log.Fatalf("Error reading settings file: %v", err)
 	}
@@ -325,7 +325,7 @@ func (a *api) refreshToken() error {
 		return err
 	}
 
-	if err := ioutil.WriteFile("settings.json", updatedJsonData, os.ModePerm); err != nil {
+	if err := ioutil.WriteFile("amocrm_token.json", updatedJsonData, os.ModePerm); err != nil {
 		fmt.Println("set WriteFile TokenStored:", err)
 	}
 	if a.storage != nil {

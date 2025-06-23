@@ -12,6 +12,7 @@ type Contacts interface {
 	GetContacts(values url.Values) (*Contactss, error, int)
 	Create(contacts []Contact) ([]Contact, error, int)
 	Update(contacts []Contact) ([]Contact, error, int)
+	AddNotes(notes []Notes) ([]Notes, error, int)
 }
 
 // Verify interface compliance.
@@ -106,4 +107,23 @@ func (a contacts) Update(contacts []Contact) (res []Contact, err error, StatusCo
 		return nil, err, resp.StatusCode
 	}
 	return resContact.Embedded.Contacts, nil, resp.StatusCode
+}
+
+func (a contacts) AddNotes(notes []Notes) (res []Notes, err error, StatusCode int) {
+	resp, rErr := a.api.do(contactsEndpoint+"/notes", http.MethodPost, nil, nil, notes)
+	if rErr != nil {
+		return nil, fmt.Errorf("Add notes to contacts: %w", rErr), resp.StatusCode
+	}
+
+	var resNote struct {
+		Embedded struct {
+			Notes []Notes `json:"notes"`
+		} `json:"_embedded"`
+	}
+
+	if err := a.api.read(resp, &resNote); err != nil {
+		return nil, err, resp.StatusCode
+	}
+
+	return resNote.Embedded.Notes, nil, resp.StatusCode
 }
