@@ -10,9 +10,9 @@ import (
 type Contacts interface {
 	GetContact(contactID string) (*Contact, error, int)
 	GetContacts(values url.Values) (*Contactss, error, int)
-	Create(contacts []Contact) ([]Contact, error, int)
-	Update(contacts []Contact) ([]Contact, error, int)
-	AddNotes(notes []Notes) ([]Notes, error, int)
+	Create(contacts []*Contact) ([]*Contact, error, int)
+	Update(contacts []*Contact) ([]*Contact, error, int)
+	AddNotes(notes []*Notes) ([]*Notes, error, int)
 }
 
 // Verify interface compliance.
@@ -75,7 +75,7 @@ func (a contacts) GetContacts(values url.Values) (res *Contactss, err error, Sta
 	return res, err, r.StatusCode
 }
 
-func (a contacts) Create(contacts []Contact) (res []Contact, err error, StatusCode int) {
+func (a contacts) Create(contacts []*Contact) (res []*Contact, err error, StatusCode int) {
 	resp, rErr := a.api.do(contactsEndpoint, http.MethodPost, nil, nil, contacts)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create contacts: %w", rErr), resp.StatusCode
@@ -83,7 +83,7 @@ func (a contacts) Create(contacts []Contact) (res []Contact, err error, StatusCo
 
 	var resContact struct {
 		Embedded struct {
-			Contacts []Contact `json:"contacts"`
+			Contacts []*Contact `json:"contacts"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.read(resp, &resContact); err != nil {
@@ -92,7 +92,7 @@ func (a contacts) Create(contacts []Contact) (res []Contact, err error, StatusCo
 	return resContact.Embedded.Contacts, nil, resp.StatusCode
 }
 
-func (a contacts) Update(contacts []Contact) (res []Contact, err error, StatusCode int) {
+func (a contacts) Update(contacts []*Contact) (res []*Contact, err error, StatusCode int) {
 	resp, rErr := a.api.do(contactsEndpoint, http.MethodPatch, nil, nil, contacts)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update contacts: %w", rErr), resp.StatusCode
@@ -100,7 +100,7 @@ func (a contacts) Update(contacts []Contact) (res []Contact, err error, StatusCo
 
 	var resContact struct {
 		Embedded struct {
-			Contacts []Contact `json:"contacts"`
+			Contacts []*Contact `json:"contacts"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.read(resp, &resContact); err != nil {
@@ -109,7 +109,7 @@ func (a contacts) Update(contacts []Contact) (res []Contact, err error, StatusCo
 	return resContact.Embedded.Contacts, nil, resp.StatusCode
 }
 
-func (a contacts) AddNotes(notes []Notes) (res []Notes, err error, StatusCode int) {
+func (a contacts) AddNotes(notes []*Notes) (res []*Notes, err error, StatusCode int) {
 	resp, rErr := a.api.do(contactsEndpoint+"/notes", http.MethodPost, nil, nil, notes)
 	if rErr != nil {
 		return nil, fmt.Errorf("Add notes to contacts: %w", rErr), resp.StatusCode
@@ -117,7 +117,7 @@ func (a contacts) AddNotes(notes []Notes) (res []Notes, err error, StatusCode in
 
 	var resNote struct {
 		Embedded struct {
-			Notes []Notes `json:"notes"`
+			Notes []*Notes `json:"notes"`
 		} `json:"_embedded"`
 	}
 

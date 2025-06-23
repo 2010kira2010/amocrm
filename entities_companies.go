@@ -12,7 +12,7 @@ type Company struct {
 	ClosedAt           interface{}        `json:"closed_at,omitempty"`
 	ClosestTaskAt      interface{}        `json:"closest_task_at,omitempty"`
 	IsDeleted          bool               `json:"is_deleted,omitempty"`
-	CustomFieldsValues []CustomsFields    `json:"custom_fields_values,omitempty"`
+	CustomFieldsValues []*CustomsFields   `json:"custom_fields_values,omitempty"`
 	AccountID          int                `json:"account_id,omitempty"`
 	Embedded           *CompaniesEmbedded `json:"_embedded,omitempty"`
 }
@@ -20,10 +20,10 @@ type Company struct {
 type Companiess struct {
 	Page     int `json:"_page,omitempty"`
 	Embedded struct {
-		Companies []Company `json:"companies,omitempty"`
+		Companies []*Company `json:"companies,omitempty"`
 	} `json:"_embedded,omitempty"`
 }
 
 type CompaniesEmbedded struct {
-	Tags []FieldValues `json:"tags,omitempty"`
+	Tags []*FieldValues `json:"tags,omitempty"`
 }

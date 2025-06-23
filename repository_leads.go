@@ -12,9 +12,9 @@ type Leads interface {
 	GetLead(leadID string) (*Lead, error, int)
 	GetListCustomFieldsLeads(fieldID string) (*CustomsField, error, int)
 	GetLeads(values url.Values) (*Leadss, error, int)
-	Create(leads []Lead) ([]Lead, error, int)
-	Update(leads []Lead) ([]Lead, error, int)
-	AddNotes(notes []Notes) ([]Notes, error, int)
+	Create(leads []*Lead) ([]*Lead, error, int)
+	Update(leads []*Lead) ([]*Lead, error, int)
+	AddNotes(notes []*Notes) ([]*Notes, error, int)
 }
 
 // Verify interface compliance.
@@ -84,7 +84,7 @@ func (a leads) GetLeads(values url.Values) (res *Leadss, err error, StatusCode i
 	return res, err, r.StatusCode
 }
 
-func (a leads) Create(leads []Lead) (res []Lead, err error, StatusCode int) {
+func (a leads) Create(leads []*Lead) (res []*Lead, err error, StatusCode int) {
 	resp, rErr := a.api.do(leadsEndpoint, http.MethodPost, nil, nil, leads)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create leads: %w", rErr), resp.StatusCode
@@ -92,7 +92,7 @@ func (a leads) Create(leads []Lead) (res []Lead, err error, StatusCode int) {
 
 	var resLead struct {
 		Embedded struct {
-			Leads []Lead `json:"leads"`
+			Leads []*Lead `json:"leads"`
 		} `json:"_embedded"`
 	}
 
@@ -103,7 +103,7 @@ func (a leads) Create(leads []Lead) (res []Lead, err error, StatusCode int) {
 	return resLead.Embedded.Leads, nil, resp.StatusCode
 }
 
-func (a leads) Update(leads []Lead) (res []Lead, err error, StatusCode int) {
+func (a leads) Update(leads []*Lead) (res []*Lead, err error, StatusCode int) {
 	resp, rErr := a.api.do(leadsEndpoint, http.MethodPatch, nil, nil, leads)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update leads: %w", rErr), resp.StatusCode
@@ -111,7 +111,7 @@ func (a leads) Update(leads []Lead) (res []Lead, err error, StatusCode int) {
 
 	var resLead struct {
 		Embedded struct {
-			Leads []Lead `json:"leads"`
+			Leads []*Lead `json:"leads"`
 		} `json:"_embedded"`
 	}
 
@@ -122,7 +122,7 @@ func (a leads) Update(leads []Lead) (res []Lead, err error, StatusCode int) {
 	return resLead.Embedded.Leads, nil, resp.StatusCode
 }
 
-func (a leads) AddNotes(notes []Notes) (res []Notes, err error, StatusCode int) {
+func (a leads) AddNotes(notes []*Notes) (res []*Notes, err error, StatusCode int) {
 	resp, rErr := a.api.do(leadsEndpoint+"/notes", http.MethodPost, nil, nil, notes)
 	if rErr != nil {
 		return nil, fmt.Errorf("Add notes to leads: %w", rErr), resp.StatusCode
@@ -130,7 +130,7 @@ func (a leads) AddNotes(notes []Notes) (res []Notes, err error, StatusCode int) 
 
 	var resNote struct {
 		Embedded struct {
-			Notes []Notes `json:"notes"`
+			Notes []*Notes `json:"notes"`
 		} `json:"_embedded"`
 	}
 

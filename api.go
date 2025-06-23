@@ -21,6 +21,9 @@ import (
 const (
 	PostMessageMode = "post_message"
 	PopupMode       = "popup"
+	userAgent       = "AmoCRM-API-Golang-Client"
+	apiVersion      = uint8(4)
+	requestTimeout  = 20 * time.Second
 )
 
 type GrantType struct {
@@ -45,12 +48,6 @@ var (
 	// 	code:   "password",
 	// 	fields: []string{"username", "password"},
 	// }
-)
-
-const (
-	userAgent      = "AmoCRM-API-Golang-Client"
-	apiVersion     = uint8(4)
-	requestTimeout = 20 * time.Second
 )
 
 // api implements Client interface.

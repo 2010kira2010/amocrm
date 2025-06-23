@@ -9,10 +9,10 @@ import (
 
 // Catalogs describes methods available for Catalogs entity.
 type Catalogs interface {
-	GetCatalog(catalogID string) (*CatalogOne, error, int)
-	GetCatalogs(values url.Values) (*CatalogsArr, error, int)
-	Create(catalogs []CatalogOne) ([]CatalogOne, error, int)
-	Update(catalogs []CatalogOne) ([]CatalogOne, error, int)
+	GetCatalog(catalogID string) (*Catalog, error, int)
+	GetCatalogs(values url.Values) (*Catalogss, error, int)
+	Create(catalogs []*Catalog) ([]*Catalog, error, int)
+	Update(catalogs []*Catalog) ([]*Catalog, error, int)
 }
 
 // Verify interface compliance.
@@ -26,7 +26,7 @@ func newCatalogs(api *api) Catalogs {
 	return catalogs{api: api}
 }
 
-func (a catalogs) GetCatalog(catalogID string) (res *CatalogOne, err error, StatusCode int) {
+func (a catalogs) GetCatalog(catalogID string) (res *Catalog, err error, StatusCode int) {
 	urlCatalog := url.Values{}
 	urlCatalog.Add("with", "contacts")
 	r, errBody := a.api.do(catalogsEndpoint+endpoint("/"+catalogID), http.MethodGet, urlCatalog, nil, nil)
@@ -35,7 +35,7 @@ func (a catalogs) GetCatalog(catalogID string) (res *CatalogOne, err error, Stat
 		return nil, errBody, r.StatusCode
 	}
 
-	res = &CatalogOne{}
+	res = &Catalog{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -43,7 +43,7 @@ func (a catalogs) GetCatalog(catalogID string) (res *CatalogOne, err error, Stat
 	return res, nil, r.StatusCode
 }
 
-func (a catalogs) GetCatalogs(values url.Values) (res *CatalogsArr, err error, StatusCode int) {
+func (a catalogs) GetCatalogs(values url.Values) (res *Catalogss, err error, StatusCode int) {
 	r, err := a.api.do(catalogsEndpoint, http.MethodGet, values, nil, nil)
 	if err != nil {
 		return nil, err, r.StatusCode
@@ -58,7 +58,7 @@ func (a catalogs) GetCatalogs(values url.Values) (res *CatalogsArr, err error, S
 		}
 	}()
 
-	res = &CatalogsArr{}
+	res = &Catalogss{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -66,7 +66,7 @@ func (a catalogs) GetCatalogs(values url.Values) (res *CatalogsArr, err error, S
 	return res, err, r.StatusCode
 }
 
-func (a catalogs) Create(catalogs []CatalogOne) (res []CatalogOne, err error, StatusCode int) {
+func (a catalogs) Create(catalogs []*Catalog) (res []*Catalog, err error, StatusCode int) {
 	resp, rErr := a.api.do(catalogsEndpoint, http.MethodPost, nil, nil, catalogs)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create catalogs: %w", rErr), resp.StatusCode
@@ -74,7 +74,7 @@ func (a catalogs) Create(catalogs []CatalogOne) (res []CatalogOne, err error, St
 
 	var resCatalog struct {
 		Embedded struct {
-			Catalogs []CatalogOne `json:"catalogs"`
+			Catalogs []*Catalog `json:"catalogs"`
 		} `json:"_embedded"`
 	}
 
@@ -85,7 +85,7 @@ func (a catalogs) Create(catalogs []CatalogOne) (res []CatalogOne, err error, St
 	return resCatalog.Embedded.Catalogs, nil, resp.StatusCode
 }
 
-func (a catalogs) Update(catalogs []CatalogOne) (res []CatalogOne, err error, StatusCode int) {
+func (a catalogs) Update(catalogs []*Catalog) (res []*Catalog, err error, StatusCode int) {
 	resp, rErr := a.api.do(catalogsEndpoint, http.MethodPatch, nil, nil, catalogs)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update catalogs: %w", rErr), resp.StatusCode
@@ -93,7 +93,7 @@ func (a catalogs) Update(catalogs []CatalogOne) (res []CatalogOne, err error, St
 
 	var resCatalog struct {
 		Embedded struct {
-			Catalogs []CatalogOne `json:"catalogs"`
+			Catalogs []*Catalog `json:"catalogs"`
 		} `json:"_embedded"`
 	}
 

@@ -1,6 +1,6 @@
 package amocrm
 
-type CatalogOne struct {
+type Catalog struct {
 	ID              int    `json:"id,omitempty"`
 	Name            string `json:"name,omitempty"`
 	CreatedBy       int    `json:"created_by,omitempty"`
@@ -22,7 +22,7 @@ type CatalogOne struct {
 	} `json:"_links,omitempty"`
 }
 
-type CatalogsArr struct {
+type Catalogss struct {
 	Page  int `json:"_page,omitempty"`
 	Links struct {
 		Self struct {

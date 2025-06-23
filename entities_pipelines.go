@@ -1,6 +1,6 @@
 package amocrm
 
-type PipelineOne struct {
+type Pipeline struct {
 	ID           int                `json:"id,omitempty"`
 	Name         string             `json:"name,omitempty"`
 	Sort         int                `json:"sort,omitempty"`

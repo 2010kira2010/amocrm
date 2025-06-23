@@ -9,10 +9,10 @@ import (
 
 // Tasks describes methods available for Tasks entity.
 type Tasks interface {
-	GetTask(taskID string) (*TaskOne, error, int)
+	GetTask(taskID string) (*Task, error, int)
 	GetTasks(values url.Values) (*Taskss, error, int)
-	Create(tasks []TaskOne) ([]TaskOne, error, int)
-	Update(tasks []TaskOne) ([]TaskOne, error, int)
+	Create(tasks []*Task) ([]*Task, error, int)
+	Update(tasks []*Task) ([]*Task, error, int)
 }
 
 // Verify interface compliance.
@@ -26,7 +26,7 @@ func newTasks(api *api) Tasks {
 	return tasks{api: api}
 }
 
-func (a tasks) GetTask(taskID string) (res *TaskOne, err error, StatusCode int) {
+func (a tasks) GetTask(taskID string) (res *Task, err error, StatusCode int) {
 	urlTask := url.Values{}
 	urlTask.Add("with", "contacts")
 	r, errBody := a.api.do(tasksEndpoint+endpoint("/"+taskID), http.MethodGet, urlTask, nil, nil)
@@ -35,7 +35,7 @@ func (a tasks) GetTask(taskID string) (res *TaskOne, err error, StatusCode int) 
 		return nil, errBody, r.StatusCode
 	}
 
-	res = &TaskOne{}
+	res = &Task{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -66,7 +66,7 @@ func (a tasks) GetTasks(values url.Values) (res *Taskss, err error, StatusCode i
 	return res, err, r.StatusCode
 }
 
-func (a tasks) Create(tasks []TaskOne) (res []TaskOne, err error, StatusCode int) {
+func (a tasks) Create(tasks []*Task) (res []*Task, err error, StatusCode int) {
 	resp, rErr := a.api.do(tasksEndpoint, http.MethodPost, nil, nil, tasks)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create tasks: %w", rErr), resp.StatusCode
@@ -74,7 +74,7 @@ func (a tasks) Create(tasks []TaskOne) (res []TaskOne, err error, StatusCode int
 
 	var resTask struct {
 		Embedded struct {
-			Tasks []TaskOne `json:"tasks"`
+			Tasks []*Task `json:"tasks"`
 		} `json:"_embedded"`
 	}
 
@@ -85,7 +85,7 @@ func (a tasks) Create(tasks []TaskOne) (res []TaskOne, err error, StatusCode int
 	return resTask.Embedded.Tasks, nil, resp.StatusCode
 }
 
-func (a tasks) Update(tasks []TaskOne) (res []TaskOne, err error, StatusCode int) {
+func (a tasks) Update(tasks []*Task) (res []*Task, err error, StatusCode int) {
 	resp, rErr := a.api.do(tasksEndpoint, http.MethodPatch, nil, nil, tasks)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update tasks: %w", rErr), resp.StatusCode
@@ -93,7 +93,7 @@ func (a tasks) Update(tasks []TaskOne) (res []TaskOne, err error, StatusCode int
 
 	var resTask struct {
 		Embedded struct {
-			Tasks []TaskOne `json:"tasks"`
+			Tasks []*Task `json:"tasks"`
 		} `json:"_embedded"`
 	}
 

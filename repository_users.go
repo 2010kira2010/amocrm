@@ -9,10 +9,10 @@ import (
 
 // Users describes methods available for Users entity.
 type Users interface {
-	GetUser(userID string) (*UserOne, error, int)
+	GetUser(userID string) (*User, error, int)
 	GetUsers(values url.Values) (*Userss, error, int)
-	Create(users []UserOne) ([]UserOne, error, int)
-	Update(users []UserOne) ([]UserOne, error, int)
+	Create(users []*User) ([]*User, error, int)
+	Update(users []*User) ([]*User, error, int)
 }
 
 // Verify interface compliance.
@@ -26,7 +26,7 @@ func newUsers(api *api) Users {
 	return users{api: api}
 }
 
-func (a users) GetUser(userID string) (res *UserOne, err error, StatusCode int) {
+func (a users) GetUser(userID string) (res *User, err error, StatusCode int) {
 	urlUser := url.Values{}
 	urlUser.Add("with", "contacts")
 	r, errBody := a.api.do(usersEndpoint+endpoint("/"+userID), http.MethodGet, urlUser, nil, nil)
@@ -35,7 +35,7 @@ func (a users) GetUser(userID string) (res *UserOne, err error, StatusCode int) 
 		return nil, errBody, r.StatusCode
 	}
 
-	res = &UserOne{}
+	res = &User{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}
@@ -66,7 +66,7 @@ func (a users) GetUsers(values url.Values) (res *Userss, err error, StatusCode i
 	return res, err, r.StatusCode
 }
 
-func (a users) Create(users []UserOne) (res []UserOne, err error, StatusCode int) {
+func (a users) Create(users []*User) (res []*User, err error, StatusCode int) {
 	resp, rErr := a.api.do(usersEndpoint, http.MethodPost, nil, nil, users)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create users: %w", rErr), resp.StatusCode
@@ -74,7 +74,7 @@ func (a users) Create(users []UserOne) (res []UserOne, err error, StatusCode int
 
 	var resUser struct {
 		Embedded struct {
-			Users []UserOne `json:"users"`
+			Users []*User `json:"users"`
 		} `json:"_embedded"`
 	}
 
@@ -85,7 +85,7 @@ func (a users) Create(users []UserOne) (res []UserOne, err error, StatusCode int
 	return resUser.Embedded.Users, nil, resp.StatusCode
 }
 
-func (a users) Update(users []UserOne) (res []UserOne, err error, StatusCode int) {
+func (a users) Update(users []*User) (res []*User, err error, StatusCode int) {
 	resp, rErr := a.api.do(usersEndpoint, http.MethodPatch, nil, nil, users)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update users: %w", rErr), resp.StatusCode
@@ -93,7 +93,7 @@ func (a users) Update(users []UserOne) (res []UserOne, err error, StatusCode int
 
 	var resUser struct {
 		Embedded struct {
-			Users []UserOne `json:"users"`
+			Users []*User `json:"users"`
 		} `json:"_embedded"`
 	}
 

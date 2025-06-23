@@ -10,8 +10,8 @@ import (
 type Companies interface {
 	GetСompany(companieID string) (*Company, error, int)
 	GetCompanies(values url.Values) (*Companiess, error, int)
-	Create(сompanies []Company) ([]Company, error, int)
-	Update(сompanies []Company) ([]Company, error, int)
+	Create(сompanies []*Company) ([]*Company, error, int)
+	Update(сompanies []*Company) ([]*Company, error, int)
 }
 
 // Verify interface compliance.
@@ -74,7 +74,7 @@ func (a сompanies) GetCompanies(values url.Values) (res *Companiess, err error,
 	return res, err, r.StatusCode
 }
 
-func (a сompanies) Create(сompanies []Company) (res []Company, err error, StatusCode int) {
+func (a сompanies) Create(сompanies []*Company) (res []*Company, err error, StatusCode int) {
 	resp, rErr := a.api.do(companiesEndpoint, http.MethodPost, nil, nil, сompanies)
 	if rErr != nil {
 		return nil, fmt.Errorf("Create сompanies: %w", rErr), resp.StatusCode
@@ -82,7 +82,7 @@ func (a сompanies) Create(сompanies []Company) (res []Company, err error, Stat
 
 	var resСompanie struct {
 		Embedded struct {
-			Companies []Company `json:"сompanies"`
+			Companies []*Company `json:"сompanies"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.read(resp, &resСompanie); err != nil {
@@ -91,7 +91,7 @@ func (a сompanies) Create(сompanies []Company) (res []Company, err error, Stat
 	return resСompanie.Embedded.Companies, nil, resp.StatusCode
 }
 
-func (a сompanies) Update(сompanies []Company) (res []Company, err error, StatusCode int) {
+func (a сompanies) Update(сompanies []*Company) (res []*Company, err error, StatusCode int) {
 	resp, rErr := a.api.do(companiesEndpoint, http.MethodPatch, nil, nil, сompanies)
 	if rErr != nil {
 		return nil, fmt.Errorf("Update сompanies: %w", rErr), resp.StatusCode
@@ -99,7 +99,7 @@ func (a сompanies) Update(сompanies []Company) (res []Company, err error, Stat
 
 	var resСompanie struct {
 		Embedded struct {
-			Companies []Company `json:"сompanies"`
+			Companies []*Company `json:"сompanies"`
 		} `json:"_embedded"`
 	}
 	if err := a.api.read(resp, &resСompanie); err != nil {

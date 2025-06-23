@@ -9,7 +9,7 @@ import (
 
 // Pipelines describes methods available for Pipelines entity.
 type Pipelines interface {
-	GetPipeline(pipelineID string) (*PipelineOne, error, int)
+	GetPipeline(pipelineID string) (*Pipeline, error, int)
 	GetPipelineStatuses(pipelineID string) (*PipelineStatuses, error, int)
 	GetPipelines(values url.Values) (*Pipeliness, error, int)
 }
@@ -25,7 +25,7 @@ func newPipelines(api *api) Pipelines {
 	return pipelines{api: api}
 }
 
-func (a pipelines) GetPipeline(pipelineID string) (res *PipelineOne, err error, StatusCode int) {
+func (a pipelines) GetPipeline(pipelineID string) (res *Pipeline, err error, StatusCode int) {
 	urlPipeline := url.Values{}
 	r, errBody := a.api.do(leadsEndpoint+"/"+pipelinesEndpoint+endpoint("/"+pipelineID), http.MethodGet, urlPipeline, nil, nil)
 
@@ -33,7 +33,7 @@ func (a pipelines) GetPipeline(pipelineID string) (res *PipelineOne, err error, 
 		return nil, errBody, r.StatusCode
 	}
 
-	res = &PipelineOne{}
+	res = &Pipeline{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}

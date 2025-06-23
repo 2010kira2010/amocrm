@@ -1,6 +1,6 @@
 package amocrm
 
-type TaskOne struct {
+type Task struct {
 	Id                int    `json:"id,omitempty"`
 	CreatedBy         int    `json:"created_by,omitempty"`
 	UpdatedBy         int    `json:"updated_by,omitempty"`
