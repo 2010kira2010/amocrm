@@ -11,7 +11,7 @@ type PipelineOne struct {
 	Embedded     *PipelinesEmbedded `json:"_embedded,omitempty"`
 }
 
-type PipelinesArr struct {
+type Pipeliness struct {
 	TotalItems int `json:"_total_items,omitempty"`
 	Embedded   struct {
 		Pipelines []struct {

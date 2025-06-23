@@ -10,7 +10,7 @@ import (
 // Tasks describes methods available for Tasks entity.
 type Tasks interface {
 	GetTask(taskID string) (*TaskOne, error, int)
-	GetTasks(values url.Values) (*TasksArr, error, int)
+	GetTasks(values url.Values) (*Taskss, error, int)
 	Create(tasks []TaskOne) ([]TaskOne, error, int)
 	Update(tasks []TaskOne) ([]TaskOne, error, int)
 }
@@ -43,7 +43,7 @@ func (a tasks) GetTask(taskID string) (res *TaskOne, err error, StatusCode int) 
 	return res, nil, r.StatusCode
 }
 
-func (a tasks) GetTasks(values url.Values) (res *TasksArr, err error, StatusCode int) {
+func (a tasks) GetTasks(values url.Values) (res *Taskss, err error, StatusCode int) {
 	r, err := a.api.do(tasksEndpoint, http.MethodGet, values, nil, nil)
 	if err != nil {
 		return nil, err, r.StatusCode
@@ -58,7 +58,7 @@ func (a tasks) GetTasks(values url.Values) (res *TasksArr, err error, StatusCode
 		}
 	}()
 
-	res = &TasksArr{}
+	res = &Taskss{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}

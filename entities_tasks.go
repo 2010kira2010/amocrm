@@ -26,7 +26,7 @@ type TaskOne struct {
 	} `json:"_links,omitempty"`
 }
 
-type TasksArr struct {
+type Taskss struct {
 	Page  int `json:"_page,omitempty"`
 	Links struct {
 		Self struct {

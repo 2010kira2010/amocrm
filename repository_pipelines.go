@@ -11,7 +11,7 @@ import (
 type Pipelines interface {
 	GetPipeline(pipelineID string) (*PipelineOne, error, int)
 	GetPipelineStatuses(pipelineID string) (*PipelineStatuses, error, int)
-	GetPipelines(values url.Values) (*PipelinesArr, error, int)
+	GetPipelines(values url.Values) (*Pipeliness, error, int)
 }
 
 // Verify interface compliance.
@@ -57,7 +57,7 @@ func (a pipelines) GetPipelineStatuses(pipelineID string) (res *PipelineStatuses
 	return res, nil, r.StatusCode
 }
 
-func (a pipelines) GetPipelines(values url.Values) (res *PipelinesArr, err error, StatusCode int) {
+func (a pipelines) GetPipelines(values url.Values) (res *Pipeliness, err error, StatusCode int) {
 	r, err := a.api.do(leadsEndpoint+"/"+pipelinesEndpoint, http.MethodGet, values, nil, nil)
 	if err != nil {
 		return nil, err, r.StatusCode
@@ -72,7 +72,7 @@ func (a pipelines) GetPipelines(values url.Values) (res *PipelinesArr, err error
 		}
 	}()
 
-	res = &PipelinesArr{}
+	res = &Pipeliness{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}

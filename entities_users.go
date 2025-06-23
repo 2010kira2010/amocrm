@@ -57,7 +57,7 @@ type UserOne struct {
 	} `json:"_links"`
 }
 
-type UsersArr struct {
+type Userss struct {
 	TotalItems int `json:"_total_items"`
 	Page       int `json:"_page"`
 	PageCount  int `json:"_page_count"`

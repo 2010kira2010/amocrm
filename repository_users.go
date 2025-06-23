@@ -10,7 +10,7 @@ import (
 // Users describes methods available for Users entity.
 type Users interface {
 	GetUser(userID string) (*UserOne, error, int)
-	GetUsers(values url.Values) (*UsersArr, error, int)
+	GetUsers(values url.Values) (*Userss, error, int)
 	Create(users []UserOne) ([]UserOne, error, int)
 	Update(users []UserOne) ([]UserOne, error, int)
 }
@@ -43,7 +43,7 @@ func (a users) GetUser(userID string) (res *UserOne, err error, StatusCode int) 
 	return res, nil, r.StatusCode
 }
 
-func (a users) GetUsers(values url.Values) (res *UsersArr, err error, StatusCode int) {
+func (a users) GetUsers(values url.Values) (res *Userss, err error, StatusCode int) {
 	r, err := a.api.do(usersEndpoint, http.MethodGet, values, nil, nil)
 	if err != nil {
 		return nil, err, r.StatusCode
@@ -58,7 +58,7 @@ func (a users) GetUsers(values url.Values) (res *UsersArr, err error, StatusCode
 		}
 	}()
 
-	res = &UsersArr{}
+	res = &Userss{}
 	if err := json.NewDecoder(r.Body).Decode(res); err != nil {
 		return nil, err, r.StatusCode
 	}

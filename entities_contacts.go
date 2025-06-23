@@ -18,7 +18,7 @@ type Contact struct {
 	ClosedAt           interface{}       `json:"closed_at,omitempty"`
 	ClosestTaskAt      interface{}       `json:"closest_task_at,omitempty"`
 	IsDeleted          bool              `json:"is_deleted,omitempty"`
-	CustomFieldsValues []CustomsFields   `json:"custom_fields_values,omitempty"`
+	CustomFieldsValues []*CustomsFields  `json:"custom_fields_values,omitempty"`
 	Score              interface{}       `json:"score,omitempty"`
 	AccountID          int               `json:"account_id,omitempty"`
 	LaborCost          interface{}       `json:"labor_cost,omitempty"`
@@ -28,10 +28,10 @@ type Contact struct {
 type Contactss struct {
 	Page     int `json:"_page,omitempty"`
 	Embedded struct {
-		Contacts []Contact `json:"contacts,omitempty"`
+		Contacts []*Contact `json:"contacts,omitempty"`
 	} `json:"_embedded,omitempty"`
 }
 
 type ContactsEmbedded struct {
-	Tags []FieldValues `json:"tags,omitempty"`
+	Tags []*FieldValues `json:"tags,omitempty"`
 }
